@@ -1,0 +1,22 @@
+<template>
+    <a
+        class="nav-link"
+        aria-current="page" 
+        :href="page.link.url"
+        :title="`This redirects you to ${page.link.text} page`"
+    >{{ page.link.text }}</a>
+</template>
+
+<script>
+export default {
+    props: ['page', 'isActive'],
+    computed: {
+        activeClasses() {
+            return {
+                active: this.isActive,
+                emphasize: this.isActive
+            }
+        }
+    }
+}
+</script>
