@@ -34,7 +34,7 @@
                         v-model="linkText"
                     />
                 </div>
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                     <label for="" class="form-label">
                         Link URL
                     </label>
@@ -43,10 +43,10 @@
                         class="form-control"
                         v-model="linkUrl"
                     />
-                </div>
+                </div> -->
                 <div class="row mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox">
+                        <input class="form-check-input" type="checkbox" v-model="published">
                         <label class="form-check-label" for="gridCheck1">
                             Published
                         </label>
@@ -65,38 +65,73 @@
     </form>
 </template>
 
-<script>
-export default {
-    props: ['pageCreated'],
-    computed: {
-        isFormInvalid() {
-            return !this.pageTitle || !this.content || !this.linkText || !this.linkUrl;
-        }
-    },
-    data() {
-        return {
-            pageTitle: '',
-            content: '',
-            linkText: '',
-            linkUrl: ''
-        }
-    },
-    methods: {
-        submitForm() {
-            if (!this.pageTitle || !this.content || !this.linkText || !this.linkUrl) {
-                alert('Please fill out form!');
-                return;
-            } else {
-                this.pageCreated({
-                    pageTitle: this.pageTitle,
-                    content: this.content,
-                    link: {
-                        text: this.linkText,
-                        url: this.linkUrl
-                    }
-                });
-            }
-        }
+<script setup>
+import { inject, ref, computed, watch} from 'vue';
+import { useRouter } from 'vue-router';
+
+const bus = inject('$bus');
+const pages = inject('$pages');
+const router = useRouter();
+
+let pageTitle = ref('');
+let content = ref('');
+let linkText = ref('');
+let linkUrl = ref('');
+let published = ref(true);
+
+function submitForm() {
+    if (!pageTitle || !content || !linkText) {
+        alert('Please fill out form!');
+        return;
     }
+
+    let newPage = {
+        pageTitle: pageTitle.value,
+        content: content.value,
+        link: {
+            text: linkText,
+        },
+        published: published.value
+    };
+
+    pages.addPage(newPage);
+
+    // customer event = $emit (public property)
+    bus.$emit('pageCreated', newPage);
+
+    router.push({path: '/pages'});
 }
+
+const isFormInvalid = computed(() => !pageTitle || !content || !linkText);
+
+watch(pageTitle, (newTitle, oldTitle) => {
+    if (linkText.value === oldTitle) {
+        linkText.value = newTitle;
+    }
+});
 </script>
+
+<!-- // props: ['pageCreated'],
+// computed properties returns a value; uses an existing value/current data
+
+// emits acts like a prop for $emit but can be used as a validator/debugger and IS OPTIONAL
+// emits: {
+//     pageCreated(pageTitle, content, link) {
+//         if (!pageTitle) {
+//             return false;
+//         }
+
+//         if (!content) {
+//             return false;
+//         }
+
+//         if (!link || !linkText || !linkUrl) {
+//             return false;
+//         }
+
+//         return true;
+//     }
+// },
+
+// watcher acts like an event listener (change) then can give us ability to change -->
+

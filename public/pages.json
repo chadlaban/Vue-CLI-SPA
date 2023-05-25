@@ -4,20 +4,23 @@
             "text": "Home", "url": "index.html"
         },
         "pageTitle": "Home Page",
-        "content": "This is the home page"
+        "content": "This is the home page",
+        "published": true
     },
     {
         "link": {
             "text": "About Us", "url": "about.html"
         },
         "pageTitle": "About Us Page",
-        "content": "This is the About Us page"
+        "content": "This is the About Us page",
+        "published": true
     },
     {
         "link": {
             "text": "Contact Us", "url": "contact.html"
         },
         "pageTitle": "Contact Us Page",
-        "content": "This is the Contact Us page"
+        "content": "This is the Contact Us page",
+        "published": false
     }
 ]
